@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useStore } from "@/store/useStore";
 import { mockIncidents, calculateDollarLossPerHour } from "@/lib/mockData";
-import { AlertTriangle, Factory, Wind, CheckCircle2, AlertCircle } from "lucide-react";
+import { AlertTriangle, Factory, Wind, CheckCircle2, AlertCircle, TrendingDown, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function LeftSidebar() {
   const { selectedIncident, setSelectedIncident, setMapViewport } = useStore();
+  const [activeTab, setActiveTab] = useState<"incidents" | "financial" | "heatmap">("incidents");
 
   const handleSelect = (incident: typeof mockIncidents[0]) => {
     setSelectedIncident(incident);
@@ -17,14 +19,29 @@ export function LeftSidebar() {
     <div className="w-96 bg-slate-900/80 backdrop-blur-xl border-r border-slate-800 h-full flex flex-col shrink-0 z-10">
       <div className="p-4 border-b border-slate-800">
         <div className="flex bg-slate-950 rounded-lg p-1">
-          <button className="flex-1 bg-indigo-500/20 text-indigo-400 py-1.5 rounded-md text-sm font-medium">Active Incidents</button>
-          <button className="flex-1 text-slate-400 py-1.5 rounded-md text-sm font-medium hover:text-slate-300">Financial</button>
-          <button className="flex-1 text-slate-400 py-1.5 rounded-md text-sm font-medium hover:text-slate-300">Heatmap</button>
+          <button 
+            onClick={() => setActiveTab("incidents")}
+            className={cn("flex-1 py-1.5 rounded-md text-sm font-medium transition-colors", activeTab === "incidents" ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400 hover:text-slate-300")}
+          >
+            Active Incidents
+          </button>
+          <button 
+            onClick={() => setActiveTab("financial")}
+            className={cn("flex-1 py-1.5 rounded-md text-sm font-medium transition-colors", activeTab === "financial" ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400 hover:text-slate-300")}
+          >
+            Financial
+          </button>
+          <button 
+            onClick={() => setActiveTab("heatmap")}
+            className={cn("flex-1 py-1.5 rounded-md text-sm font-medium transition-colors", activeTab === "heatmap" ? "bg-indigo-500/20 text-indigo-400" : "text-slate-400 hover:text-slate-300")}
+          >
+            Heatmap
+          </button>
         </div>
       </div>
       
       <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-        {mockIncidents.map((incident) => {
+        {activeTab === "incidents" && mockIncidents.map((incident) => {
           const isSelected = selectedIncident?.id === incident.id;
           const isCritical = incident.status === "Critical";
           
@@ -86,6 +103,22 @@ export function LeftSidebar() {
             </div>
           );
         })}
+
+        {activeTab === "financial" && (
+          <div className="text-slate-400 text-sm p-4 text-center border border-slate-800 rounded-lg bg-slate-900/50 flex flex-col items-center gap-3">
+            <TrendingDown className="w-8 h-8 text-slate-600" />
+            <p>Financial impact analytics are currently being calculated in the background.</p>
+            <p className="text-xs text-slate-500">Check the individual incident details for exact hourly loss metrics.</p>
+          </div>
+        )}
+
+        {activeTab === "heatmap" && (
+          <div className="text-slate-400 text-sm p-4 text-center border border-slate-800 rounded-lg bg-slate-900/50 flex flex-col items-center gap-3">
+            <Layers className="w-8 h-8 text-slate-600" />
+            <p>Infrastructure Heatmap data is synchronizing with orbital nodes.</p>
+            <p className="text-xs text-slate-500">Please use the Overlay Controls on the map to toggle visibility.</p>
+          </div>
+        )}
       </div>
     </div>
   );
