@@ -53,11 +53,15 @@ export default function MapContent() {
       center={mapViewport.center}
       zoom={mapViewport.zoom}
       zoomControl={false}
+      minZoom={3}
+      maxBounds={[[-90, -180], [90, 180]]}
+      maxBoundsViscosity={1.0}
       style={{ width: "100%", height: "100%", background: "#0f172a" }}
     >
       <TileLayer
         attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
         url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+        noWrap={true}
       />
       <MapUpdater />
 
