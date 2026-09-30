@@ -89,9 +89,9 @@ export default function MapContent() {
               data={createPlumeGeoJSON(incident)}
               style={() => ({
                 color: incident.status === "Critical" ? "#f43f5e" : "#f59e0b",
-                weight: 0,
-                fillOpacity: 0.4,
-                fillColor: incident.status === "Critical" ? "url(#gradient-critical)" : "url(#gradient-mod)",
+                weight: 2,
+                fillOpacity: 0.6,
+                fillColor: incident.status === "Critical" ? "#e11d48" : "#d97706",
               })}
               eventHandlers={{
                 click: () => {
@@ -102,17 +102,6 @@ export default function MapContent() {
           )}
         </div>
       ))}
-
-      {/* SVG Definitions for GeoJSON gradients (hacky but works for map overlays sometimes, though Leaflet SVG styling is tricky) */}
-      <svg width="0" height="0">
-        <defs>
-          <radialGradient id="gradient-critical">
-            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#e11d48" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-      </svg>
     </MapContainer>
   );
 }
